@@ -5,6 +5,15 @@ const dotenv = require('dotenv');
 
 dotenv.config({ path: './config.env' });
 
+module.exports = class Email {
+  constructor(user, url) {
+    this.to = user.email,
+    this.firstName = user.name.split(' ')[0];
+    this.url = url,
+    this.from = `Delightsome Asolo <${process.end.EMAIL_FROM}>`
+  }
+}
+
 const sendEmail = async (options) => {
   const transporter = nodemailer.createTransport({
     host: 'sandbox.smtp.mailtrap.io',
