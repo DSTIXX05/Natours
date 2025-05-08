@@ -12,13 +12,23 @@ module.exports = class Email {
     this.to = user.email,
     this.firstName = user.name.split(' ')[0];
     this.url = url,
-    this.from = `Delightsome Asolo <${process.env.EMAIL_FROM}>`
+    this.from = `Delightsome Asolo <${process.env.MAILSENDER_USERNAME}>`;
   }
 
   newTransport(){
-    if (process.env.NODE_ENV==='production'){
-      //Sendgrid
-      return 1;
+    if (process.env.NODE_ENV==='development'){
+      //Mailsender
+
+      
+      return nodemailer.createTransport({
+       host: 'smtp.mailersend.net', // MailerSend SMTP host
+        port: 587,                    // TLS (alternatively 465 for SSL)
+
+        auth: {
+          user: `${process.env.MAILSENDER_USERNAME}`,
+          pass: `${process.env.MAILSENDER_PASSWORD}`
+  }
+      });
     }
 
     return nodemailer.createTransport({
@@ -55,4 +65,8 @@ module.exports = class Email {
 
   async sendWelcome(){
     await this.send('welcome', 'Welcome to the Natours Family!')
-}};
+  }
+  async sendPasswordReset(){
+    await this.send('passwordReset', 'Welcome to the Natours Family')
+  }
+};
