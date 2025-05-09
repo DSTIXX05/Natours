@@ -105,7 +105,7 @@ userSchema.methods.passwordChangedAfter = function (JWTTimestamp) {
     const changedTimeStamp = parseInt(
       this.passwordChangedAt.getTime() / 1000,
       10,
-    ); //Because the time is in milliseconds.
+    ); //Because the time is in milliseconds. Second option specifies the base/ radix.
 
     // console.log(changedTimeStamp, JWTTimestamp);
     return JWTTimestamp < changedTimeStamp;
