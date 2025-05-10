@@ -69,7 +69,7 @@ app.use(
 app.use((req, res, next) => {
   res.setHeader(
     'Content-Security-Policy',
-    "script-src 'self' 'unsafe-inline' http://127.0.0.1:3000 https://cdnjs.cloudflare.com https://api.mapbox.com https://events.mapbox.com blob:; worker-src 'self' blob:;",
+    "script-src 'self' 'unsafe-inline' http://127.0.0.1:3000 https://cdnjs.cloudflare.com https://api.mapbox.com https://events.mapbox.com https://js.stripe.com/v3/ blob:; worker-src 'self' blob:;",
   );
   next();
 });
