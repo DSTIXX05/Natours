@@ -15,9 +15,11 @@ const globalErrorHandler = require('./Controllers/errorController');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
+const bookingRouter = require('./routes/bookingRoutes');
 const viewRouter = require('./routes/viewRoutes');
 
 const app = express();
+app.set('view engine', 'pug');
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, './Views'));
 
@@ -56,11 +58,7 @@ app.use(
         'https://events.mapbox.com',
         'blob:',
       ],
-      styleSrc: [
-        "'self'",
-        'https://api.mapbox.com',
-        'https://fonts.googleapis.com',
-      ],
+      styleSrc: ["'self'", 'https://api.mapbox.com', 'https://fonts.googleapis.com'],
       fontSrc: ["'self'", 'https://fonts.gstatic.com'],
       imgSrc: ["'self'", 'data:', 'https://api.mapbox.com'],
       connectSrc: ["'self'", 'https://api.mapbox.com', 'http://127.0.0.1:3000'],
@@ -122,6 +120,7 @@ app.use('/', viewRouter);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
+app.use('/api/v1/bookings', bookingRouter);
 
 // Serve the overview page
 app.get('/overview', (req, res) => {

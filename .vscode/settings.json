@@ -1,0 +1,6 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "vs-code-prettier-eslint.prettierLast": true,
+  "notebook.defaultFormatter": "rvest.vs-code-prettier-eslint"
+}

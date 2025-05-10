@@ -1,10 +1,8 @@
-// eslint-disable-next-line no-unused-vars
+// eslint-disable-next-line import/no-unresolved, node/no-missing-require
 const multer = require('multer');
 const sharp = require('sharp');
 const { message } = require('statuses');
 const Tour = require('../Models/tourModel');
-// eslint-disable-next-line import/no-unresolved, node/no-missing-require
-
 const catchAsync = require(`../utils/catchAsync`);
 const AppError = require('../utils/appError');
 const factory = require('./handlerFactory');
