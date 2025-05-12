@@ -39,7 +39,7 @@ app.use(
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser());
 
-//changes req.host from 127.0.0.1:3000 to localhost:3000
+//changes req.host from 127.0.0.1:3000 to localhost
 app.use((req, res, next) => {
   if (req.get('host').startsWith('127.0.0.1')) {
     req.headers.host = req.headers.host.replace('127.0.0.1', 'localhost');

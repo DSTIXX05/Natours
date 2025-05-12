@@ -19,6 +19,7 @@ router.get('/login', viewController.getLoginForm);
 router.get('/tour', authController.isLoggedIn, viewController.getTour);
 
 router.get('/me', authController.protect, authController.isLoggedIn, viewController.getAccount);
+router.get('/my-tours', authController.protect, viewController.getMyTours);
 
 // router.post('/submit-user-data',  authController.isLoggedIn, authController.protect, viewController.updateUserData);
 // router.post('/submit-user-data', viewController.getAccount);
