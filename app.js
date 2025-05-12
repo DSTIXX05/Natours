@@ -39,6 +39,16 @@ app.use(
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser());
 
+//changes req.host from 127.0.0.1:3000 to localhost:3000
+app.use((req, res, next) => {
+  if (req.get('host').startsWith('127.0.0.1')) {
+    req.headers.host = req.headers.host.replace('127.0.0.1', 'localhost');
+  }
+
+  // console.log('This host changer block of code was actually used.');
+  next();
+});
+
 // app.use((req, res, next) => {
 //   console.log('Cookies from app.js', req.cookies); // Log cookies for debugging
 //   next();
@@ -55,6 +65,7 @@ app.use(
         'https://cdnjs.cloudflare.com',
         'https://api.mapbox.com',
         'https://events.mapbox.com',
+        'https://js.stripe.com/v3/',
         'blob:',
       ],
       styleSrc: ["'self'", 'https://api.mapbox.com', 'https://fonts.googleapis.com'],
