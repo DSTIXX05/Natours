@@ -10,12 +10,12 @@ const factory = require('./handlerFactory');
 const multerStorage = multer.memoryStorage();
 
 const multerFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith('image')){
+  if (file.mimetype.startsWith('image')) {
     cb(null, true);
   } else {
-    cb(new AppError('Not an image! Please upload only images.', 400))
+    cb(new AppError('Not an image! Please upload only images.', 400));
   }
-}
+};
 
 const upload = multer({
   storage: multerStorage,
@@ -23,44 +23,42 @@ const upload = multer({
 });
 
 exports.uploadTourImages = upload.fields([
-  {name: 'imageCover', maxCount: 1},
-  {name: 'images', maxCount: 3}
-])
+  { name: 'imageCover', maxCount: 1 },
+  { name: 'images', maxCount: 3 },
+]);
 
 exports.resizeTourImages = catchAsync(async (req, res, next) => {
   if (!req.files.imageCover || !req.files.images) return next();
 
   // 1) process cover image
   req.body.imageCover = `tour-${req.params.id}-${Date.now()}-cover.jpeg`;
-  // console.log("req.body")
   await sharp(req.files.imageCover[0].buffer)
     .resize(2000, 1333)
     .toFormat('jpeg')
-    .jpeg({quality: 90})
-    .toFile(`public/img/tours/${req.body.imageCover}`)
-
+    .jpeg({ quality: 90 })
+    .toFile(`public/img/tours/${req.body.imageCover}`);
 
   // 2) Images
-  req.body.images = []
+  req.body.images = [];
 
-  await Promise.all (req.files.images.map(async(file, i)=> {
-    const filename = `tour-${req.params.id}-${Date.now()}-${i+1}.jpeg`
-  
-  await sharp(file.buffer)
-  .resize(2000, 1333)
-  .toFormat('jpeg')
-  .jpeg({quality: 90})
-  .toFile(`public/img/tours/${filename}`)
+  await Promise.all(
+    req.files.images.map(async (file, i) => {
+      const filename = `tour-${req.params.id}-${Date.now()}-${i + 1}.jpeg`;
 
-  req.body.images.push(filename)
-  })
+      await sharp(file.buffer)
+        .resize(2000, 1333)
+        .toFormat('jpeg')
+        .jpeg({ quality: 90 })
+        .toFile(`public/img/tours/${filename}`);
+
+      req.body.images.push(filename);
+    }),
   );
 
-next();
+  next();
 });
 
 exports.aliasTopTours = (req, res, next) => {
-  // console.log('Hi!');
   req.query.limit = '5';
   req.query.sort = '-ratingsAverage,price';
   req.query.field = 'name,price,duratoion,rating,ratingsAverage';
@@ -103,10 +101,10 @@ exports.getTourStats = catchAsync(async (req, res, next) => {
 exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
   const year = req.params.year * 1;
   // eslint-disable-next-line prettier/prettier
-    const plan = await Tour.aggregate([
+  const plan = await Tour.aggregate([
     {
       // eslint-disable-next-line prettier/prettier
-        $unwind: '$startDates',
+      $unwind: '$startDates',
     },
     {
       $match: {
@@ -157,12 +155,7 @@ exports.getTourWithin = catchAsync(async (req, res, next) => {
   const radius = unit === 'mi' ? distance / 3963.2 : distance / 6378.1;
 
   if (!lat || !lng) {
-    next(
-      new AppError(
-        'Please provide latitude and longitude in the format lat, lng.',
-        400,
-      ),
-    );
+    next(new AppError('Please provide latitude and longitude in the format lat, lng.', 400));
   }
 
   const tours = await Tour.find({
@@ -185,12 +178,7 @@ exports.getDistances = catchAsync(async (req, res, next) => {
   // const radius = unit === 'mi' ? distance / 3963.2 : distance / 6378.1;
 
   if (!lat || !lng) {
-    next(
-      new AppError(
-        'Please provide latitude and longitude in the format lat, lng.',
-        400,
-      ),
-    );
+    next(new AppError('Please provide latitude and longitude in the format lat, lng.', 400));
   }
 
   const distances = await Tour.aggregate([

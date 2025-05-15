@@ -90,8 +90,6 @@ exports.getAll = (Model) =>
     // const doc = await features.query.explain();
     const doc = await features.query;
 
-    // console.log(req.query, queryObj);
-
     //Send Response.
     res.status(200).json({
       status: 'success',

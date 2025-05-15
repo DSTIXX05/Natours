@@ -68,8 +68,6 @@ reviewSchema.statics.calcAverageRatings = async function (tourId) {
     },
   ]);
 
-  // console.log(stats);
-
   if (stats.length > 0) {
     await Tour.findByIdAndUpdate(tourId, {
       ratingsQuantity: stats[0].nRating,
@@ -89,16 +87,6 @@ reviewSchema.post('save', function () {
   //this points to the current review.
   this.constructor.calcAverageRatings(this.tour); //I'm using this.constructor becuase as it stands, the middleware doesn't have access to the Review Model. The constructor points to the Review model.
 });
-
-// reviewSchema.pre(/^findOneAnd/, async function (next) {
-//   this.r = await this.findOne();
-//   console.log(this.r);
-//   next();
-// });
-
-// reviewSchema.post(/^findOneAnd/, async function () {
-//   await this.r.constructor.calcAverageRatings(this.r.tour);
-// });
 
 reviewSchema.post(/^findOneAnd/, async function (doc) {
   await this.model.calcAverageRatings(doc.tour);

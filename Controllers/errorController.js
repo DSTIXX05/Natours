@@ -17,8 +17,7 @@ const handleValidationErrorDB = (err) => {
   return new AppError(message, 404);
 };
 
-const handleJWTError = () =>
-  new AppError('Invalid token, Please login again!', 401);
+const handleJWTError = () => new AppError('Invalid token, Please login again!', 401);
 
 const handleJWTExpiredError = () =>
   new AppError('Your token has expired, Please log in again.', 401);
@@ -36,8 +35,8 @@ const sendErrorDev = (err, req, res) => {
     //RENDERED WEBSITE
     return res.status(err.statusCode).render('error', {
       title: 'Something went wrong!',
-      msg: err.message
-    })
+      msg: err.message,
+    });
   }
 };
 
@@ -73,13 +72,9 @@ const sendErrorProd = (err, req, res) => {
     title: 'Something went wrong!',
     msg: 'Please try again later.',
   });
-
-  // console.log("Error in production mode.");
 };
 
-    
 module.exports = (err, req, res, next) => {
-  // console.log(err.stack);
   err.statusCode = err.statusCode || 500;
   err.status = err.status || 'error';
 

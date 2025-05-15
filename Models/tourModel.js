@@ -7,22 +7,9 @@ const dotenv = require('dotenv');
 // const validator = require('validator');
 
 dotenv.config({ path: './config.env' });
+const DB = process.env.DATABASE.replace('<DATABASE_PASSWORD>', process.env.DATABASE_PASSWORD);
 
-// const a = (process.env.NODE_ENV)
-
-// console.log(a)
-const DB = process.env.DATABASE.replace(
-  '<DATABASE_PASSWORD>',
-  process.env.DATABASE_PASSWORD,
-);
-
-mongoose
-  .connect(DB, {
-    // useNewUrlParser: true,
-    // useUnifiedTopology: true,
-  })
-  // .then(() => console.log('DB connection successful!'))
-  .catch((err) => console.log('DB connection error:', err));
+mongoose.connect(DB, {}).catch((err) => console.log('DB connection error:', err));
 
 const tourSchema = new mongoose.Schema(
   {
@@ -160,7 +147,6 @@ tourSchema.virtual('reviews', {
 //DOCUMENT MIDDLEWARE
 tourSchema.pre('save', function (next) {
   this.slug = slugify(this.name, { lower: true });
-  // console.log('I used the middleware.');
   next();
 });
 
@@ -171,7 +157,6 @@ tourSchema.pre('save', function (next) {
 // });
 
 tourSchema.post('save', (doc, next) => {
-  console.log(doc);
   next();
 });
 
@@ -190,10 +175,10 @@ tourSchema.pre(/^find/, function (next) {
   next();
 });
 
-tourSchema.post(/^find/, function (docs, next) {
-  console.log(`Query took ${Date.now() - this.start} milliseconds.`);
-  next();
-});
+// tourSchema.post(/^find/, function (docs, next) {
+//   console.log(`Query took ${Date.now() - this.start} milliseconds.`);
+//   next();
+// });
 
 // AGGREGATION MIDDLEWARE
 // tourSchema.pre('aggregate', function (next) {

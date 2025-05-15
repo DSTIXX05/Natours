@@ -52,17 +52,12 @@ exports.signup = catchAsync(async (req, res) => {
   });
 
   const url = `${req.protocol}://${req.get('host')}/me`;
-  // console.log('The url is now', url);
-  // const url = `${req.protocol}://localhost:3000/me`;
-  console.log(url);
   await new Email(newUser, url).sendWelcome();
   createSendToken(newUser, 201, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
-
-  // console.log({ email, password });
 
   //1) check if email and password exist
   if (!email || !password) {
@@ -71,8 +66,6 @@ exports.login = catchAsync(async (req, res, next) => {
 
   //2) Check if user exists
   const user = await User.findOne({ email }).select('+password');
-  // console.log(user);
-  // console.log(`user password from auth controller: ${user.password}`);
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError('Incorrect email or password', 401));
   }
@@ -98,7 +91,6 @@ exports.protect = catchAsync(async (req, res, next) => {
   } else if (req.cookies.jwt) {
     token = req.cookies.jwt;
   }
-  // console.log(`Token from auth controller ${token}`);
 
   if (!token) {
     return next(new AppError('You are not logged in! Please log in to get access', 401));
@@ -106,7 +98,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   // 2 Verification token
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-  console.log(decoded);
+  // console.log(decoded);
 
   // 3 Check if user still exists
   const CurrentUser = await User.findById(decoded.id);
@@ -119,7 +111,6 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
 
   req.user = CurrentUser;
-  console.log('This is the current user log');
   res.locals.user = CurrentUser; // For rendering pages
   next();
 });
@@ -130,8 +121,6 @@ exports.isLoggedIn = async (req, res, next) => {
     try {
       //verify token
       const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET);
-      console.log(decoded);
-
       // 3 Check if user still exists
       const CurrentUser = await User.findById(decoded.id);
       if (!CurrentUser) {
@@ -167,12 +156,10 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   // 2) Generate random reset token
   const resetToken = user.createPasswordResetToken();
   await user.save({ validateBeforeSave: false });
-  console.log(`reset token: ${resetToken}`);
 
   // 3) Sent it to user's email
   try {
     const resetURL = `${req.protocol}://${req.get('host')}/api/v1/users/resetpassword/${resetToken}`;
-    // console.log(resetURL);
     const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetURL}.\nIf you didn't forget your password, please ignore this email!`;
 
     await new Email(user, resetURL).sendPasswordReset();
@@ -215,7 +202,6 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
   // 1) Get user from collection
-  console.log(req.user.id);
   const user = await User.findById(req.user.id).select('+password');
 
   // 2) Check if POSTed current password is correct

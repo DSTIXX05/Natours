@@ -11,14 +11,9 @@ const validator = require('validator');
 // eslint-disable-next-line no-undef
 dotenv.config({ path: './config.env' });
 
-const DB = process.env.DATABASE.replace(
-  '<DATABASE_PASSWORD>',
-  process.env.DATABASE_PASSWORD,
-);
+const DB = process.env.DATABASE.replace('<DATABASE_PASSWORD>', process.env.DATABASE_PASSWORD);
 
-mongoose
-  .connect(DB, {})
-  .catch((err) => console.log('DB connection error:', err));
+mongoose.connect(DB, {}).catch((err) => console.log('DB connection error:', err));
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -34,7 +29,7 @@ const userSchema = new mongoose.Schema({
   },
   photo: {
     type: String,
-    default: 'default.jpg'
+    default: 'default.jpg',
   },
   role: {
     type: String,
@@ -93,21 +88,13 @@ userSchema.pre(/^find/, function (next) {
 });
 
 // Password checker
-userSchema.methods.correctPassword = async function (
-  candidatePassword,
-  userPassword,
-) {
+userSchema.methods.correctPassword = async function (candidatePassword, userPassword) {
   return await bcrypt.compare(candidatePassword, userPassword);
 };
 
 userSchema.methods.passwordChangedAfter = function (JWTTimestamp) {
   if (this.passwordChangedAt) {
-    const changedTimeStamp = parseInt(
-      this.passwordChangedAt.getTime() / 1000,
-      10,
-    ); //Because the time is in milliseconds. Second option specifies the base/ radix.
-
-    // console.log(changedTimeStamp, JWTTimestamp);
+    const changedTimeStamp = parseInt(this.passwordChangedAt.getTime() / 1000, 10); //Because the time is in milliseconds. Second option specifies the base/ radix.
     return JWTTimestamp < changedTimeStamp;
   }
 };
@@ -115,10 +102,7 @@ userSchema.methods.passwordChangedAfter = function (JWTTimestamp) {
 userSchema.methods.createPasswordResetToken = function () {
   const resetToken = crypto.randomBytes(32).toString('hex');
 
-  this.passwordResetToken = crypto
-    .createHash('sha256')
-    .update(resetToken)
-    .digest('hex');
+  this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
 
   this.passwordResetExpires = Date.now() + 10 * 60 * 1000; //Because time is in milliseconds here.
 

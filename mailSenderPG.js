@@ -15,8 +15,6 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-console.log(process.env.EMAIL_PASSWORD);
-
 // Configure the mailoptions object
 const mailOptions = {
   from: 'yourusername@email.com',

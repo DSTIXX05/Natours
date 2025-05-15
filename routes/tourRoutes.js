@@ -8,14 +8,10 @@ const router = express.Router();
 
 router.use('/:tourId/reviews', reviewRouter);
 
-router
-  .route('/top-5-cheap')
-  .get(tourController.aliasTopTours, tourController.getAllTours);
+router.route('/top-5-cheap').get(tourController.aliasTopTours, tourController.getAllTours);
 router.route('/tour-stats').get(tourController.getTourStats);
 
-router
-  .route('/tours-within/:distance/center/:latlng/unit/:unit')
-  .get(tourController.getTourWithin);
+router.route('/tours-within/:distance/center/:latlng/unit/:unit').get(tourController.getTourWithin);
 
 router
   .route(
